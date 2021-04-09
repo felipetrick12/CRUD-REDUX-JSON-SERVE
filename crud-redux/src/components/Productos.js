@@ -1,6 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector  } from 'react-redux'
+import { productoGET } from '../actions/productoAction'
+import { Producto } from './Producto';
 
 export const Productos = () => {
+
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        dispatch(productoGET());
+    }, [dispatch])
+    
+    const {products} = useSelector( state => state.productos)
+
+   
     return (
         <>
            <h2 className="text-center my-5">Listado de Productos</h2>
@@ -18,14 +31,15 @@ export const Productos = () => {
                     </tr>
                </thead>
                <tbody>
-                   {/* { productos.length === 0 ? 'No hay productos' : (
-                       productos.map(producto => (
+                   { products.length === 0 ? 'No hay productos' : (
+                       products.map(producto => (
+                        
                            <Producto
                                 key={producto.id}
                                 producto={producto}
                            />
                        ))
-                   ) } */}
+                   ) }
                </tbody>
            </table>
        </>

@@ -1,6 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useDispatch  } from 'react-redux'
 
-export const NuevoProducto = () => {
+import {productoCreate} from '../actions/productoAction'
+
+export const NuevoProducto = ({history}) => {
+
+     //utilizar dispatchde redux
+    const dispatch = useDispatch();
+
+   //crear validacion del formulario
+   const [error, setError] = useState(false)
+   
+    // Crear state del fomrulario
+    const [producto, setState] = useState( {
+        nombre: '',
+        precio: ''
+    })
+
+    //desestructurar arreglo
+    const {nombre,precio} = producto;
+
+    //hacer el cambio de valor en los campos
+    const guardarState = (e) => {
+        setState({
+            ...producto,
+            [e.target.name] : e.target.value
+        })
+    }
+
+    //enviar producto
+    const submitNuevoProducto = (e) => {
+        e.preventDefault();
+
+        
+        if( nombre.trim() === '' || precio <=0 ){
+            return setError(true);
+        }else{
+            setError(false);
+            dispatch(productoCreate(producto))
+            setInterval(() => {
+                history.push('/');
+            }, 1000);
+        }
+    
+        
+    }
+    
+
     return (
        <div className="row justify-content-center">
             <div className="col-md-8">
@@ -13,7 +59,7 @@ export const NuevoProducto = () => {
                         {/* {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null } */}
 
                         <form
-                            // onSubmit={submitNuevoProducto}
+                             onSubmit={submitNuevoProducto}
                         >
                             <div className="form-group">
                                 <label>Nombre Producto</label>
@@ -23,8 +69,8 @@ export const NuevoProducto = () => {
                                     className="form-control"
                                     placeholder="Nombre Producto"
                                     name="nombre"
-                                    // value={nombre}
-                                    // onChange={e => guardarNombre(e.target.value)}
+                                    value={nombre}
+                                    onChange={guardarState}
                                 />
                             </div>
 
@@ -35,8 +81,8 @@ export const NuevoProducto = () => {
                                     className="form-control"
                                     placeholder="Precio Producto"
                                     name="precio"
-                                    // value={precio}
-                                    // onChange={e =>  guardarPrecio( Number(e.target.value) )}
+                                    value={precio}
+                                    onChange={guardarState}
                                 />
                             </div>
 
@@ -46,9 +92,9 @@ export const NuevoProducto = () => {
                             >Agregar</button>
                         </form>
 
-                        {/* { cargando ? <p>Cargando...</p> : null }
+                         {/* { cargando ? <p>Cargando...</p> : null } */}
                         
-                        { error ? <p className="alert alert-danger p2 mt-4 text-center">Hubo un error</p> : null } */}
+                        { error ? <p className="alert alert-danger p2 mt-4 text-center">Hubo un error</p> : null } 
                     </div>
                 </div>
             </div>
